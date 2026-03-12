@@ -305,6 +305,21 @@
       muteBtn.textContent = muted ? 'sound off' : 'sound on';
     });
 
+    function startAudio() {
+      audio.volume = 0.01; // iOS won't unlock at volume 0
+      audio.play().then(() => {
+        let vol = 0.01;
+        const fade = setInterval(() => {
+          vol = Math.min(vol + 0.008, 0.70);
+          audio.volume = vol;
+          if (vol >= 0.70) clearInterval(fade);
+        }, 60);
+      }).catch(() => {
+        // play blocked — will retry on next interaction
+        started = false;
+      });
+    }
+
     function begin() {
       if (started) return;
       started = true;
@@ -313,22 +328,13 @@
       footer.classList.add('visible');
       muteBtn.classList.add('visible');
 
-      audio.volume = 0;
-      audio.play().catch(() => {});
-
-      let vol = 0;
-      const fade = setInterval(() => {
-        vol = Math.min(vol + 0.008, 0.70);
-        audio.volume = vol;
-        if (vol >= 0.70) clearInterval(fade);
-      }, 60);
-
+      startAudio();
       showNext();
       setInterval(showNext, 12000);
     }
 
     document.addEventListener('click', begin);
-    document.addEventListener('touchstart', begin);
+    document.addEventListener('touchend', begin); // touchend more reliable than touchstart on iOS
     document.addEventListener('keydown', begin);
   </script>
 
