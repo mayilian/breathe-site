@@ -216,56 +216,51 @@
     <p class="phrase" id="phrase-b"></p>
   </div>
 
-  <div class="start-prompt" id="start-prompt">— touch to begin —</div>
+  <div class="start-prompt" id="start-prompt">touch to begin</div>
   <div class="footer" id="footer">no tracking &nbsp;&middot;&nbsp; no agenda &nbsp;&middot;&nbsp; no next step</div>
 
   <script>
     const phrases = [
-      // the system
-      "The scroll never ends because ending would mean confronting what's underneath",
-      "You are not distracted — you are being distracted",
+      "The scroll never ends because ending would mean confronting what is underneath",
+      "Distraction at this scale is not accidental",
       "The feed is engineered to feel like life",
-      "Outrage is the cheapest form of engagement and the most reliably harvested",
-      "The market has colonized the interior",
-      "Comfort has been optimized — meaning has not",
-      "The promoted life is not a life — it is a demonstration of one",
-      "You are simultaneously the product and the consumer",
       "Busyness is the acceptable face of emptiness",
-      "The noise is not incidental — it is the point",
-      // the emptiness
+      "Comfort was optimized. The other thing was not.",
+      "The promoted life is a performance of living",
+      "The noise is not a side effect",
       "The hollowness is systemic, not personal",
-      "The emptiness is not a bug — it is the design",
-      "What you're running from isn't behind you",
+      "The emptiness was not an oversight",
+      "What you are running from is not behind you",
       "There is no self-help solution to a structural problem",
-      "The void doesn't go away when you stop looking — it gets louder",
+      "The void does not go away when you stop looking at it",
       "Spiritual asthma: the sensation of suffocating in plain air",
-      "You didn't fail the system — the system failed to be worth succeeding in",
-      // the rush
-      "The urgency is real — the emergency is manufactured",
-      "Speed is how we avoid the question that speed was supposed to answer",
-      "The adrenaline is not aliveness — it is the substitute for it",
-      "You are not behind — you are being told you are behind",
+      "Exhaustion is sometimes the most honest response available",
+      "Most of what feels urgent was made to feel that way",
+      "Adrenaline is a reliable substitute for aliveness",
+      "The feeling of being behind is a product someone sells",
       "Productivity is the secular answer to the sacred question",
-      "We have confused motion for direction for so long we've forgotten they're different",
-      // the body & breath
+      "Speed is how we avoid the question that speed was supposed to answer",
+      "We have confused motion for direction for so long we forgot they were different",
       "The body keeps noticing what the mind has agreed to ignore",
-      "Breathing slowly is inconvenient for a fast-moving economy",
+      "Slow breathing has no commercial value. It works anyway.",
       "The breath was here before the noise and will be here after",
       "Something in you knows the difference between alive and performing alive",
-      "This is what a body feels like when it isn't performing",
-      // identity & commerce
+      "This is what a body feels like when it is not performing",
       "You were given a self before you were given a brand",
-      "Authenticity has been packaged and sold back to you at a markup",
-      "The influencer is a symptom — the disease is older",
-      "You cannot buy your way out of what consumption created",
-      "The personal became commercial so gradually that reclaiming it feels naive",
+      "The influencer is a symptom of something much older",
+      "Silence is one of the few remaining things that cannot be monetized",
+      "Something in you preceded all of this",
       "Nothing here is trying to convert you",
-      // diagnosis
       "We have called the symptoms a lifestyle",
-      "Every era gets the numbness it deserves — this one is exceptionally loud",
-      "The crisis is not approaching — it is the ambient condition",
-      "Something is wrong and everyone knows it and almost no one says it plainly",
-      "The collective pretense that this is fine is itself a form of exhaustion"
+      "This era chose volume as its primary language",
+      "There is a shared knowing that most people carry quietly",
+      "Tiredness of this kind is not about sleep",
+      "The interior is the last territory without a business model",
+      "Somewhere the distinction between the product and the consumer dissolved",
+      "Outrage travels further than almost anything else. Stillness does not travel at all.",
+      "We have organized our days around everything except the question underneath them",
+      "The ambient hum is not neutral",
+      "Something real still exists underneath the category"
     ];
 
     // shuffle once on load
@@ -305,21 +300,6 @@
       muteBtn.textContent = muted ? 'sound off' : 'sound on';
     });
 
-    function startAudio() {
-      audio.volume = 0.01; // iOS won't unlock at volume 0
-      audio.play().then(() => {
-        let vol = 0.01;
-        const fade = setInterval(() => {
-          vol = Math.min(vol + 0.008, 0.70);
-          audio.volume = vol;
-          if (vol >= 0.70) clearInterval(fade);
-        }, 60);
-      }).catch(() => {
-        // play blocked — will retry on next interaction
-        started = false;
-      });
-    }
-
     function begin() {
       if (started) return;
       started = true;
@@ -328,13 +308,16 @@
       footer.classList.add('visible');
       muteBtn.classList.add('visible');
 
-      startAudio();
+      audio.volume = 0.70;
+      audio.load();
+      audio.play().catch(() => {});
+
       showNext();
       setInterval(showNext, 12000);
     }
 
     document.addEventListener('click', begin);
-    document.addEventListener('touchend', begin); // touchend more reliable than touchstart on iOS
+    document.addEventListener('touchend', begin);
     document.addEventListener('keydown', begin);
   </script>
 
